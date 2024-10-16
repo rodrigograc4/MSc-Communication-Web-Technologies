@@ -5,10 +5,14 @@
 ## API's
 
 **GET Sprite Pokemon Fronts**
-``` https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/6.png ```
+```
+https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/6.png
+```
 
 **GET Sprite Pokemon Back**
-``` https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/back/6.png ```
+```
+https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/back/6.png
+```
 
 **GET Pokemon Name of Pokemon Number**
 ```
