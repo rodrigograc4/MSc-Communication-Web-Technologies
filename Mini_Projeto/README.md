@@ -4,6 +4,11 @@
 
 ## API's
 
+**LAST Pokemon Number**
+```
+Arceus - #493
+```
+
 **GET Sprite Pokemon Fronts**
 ```
 https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/6.png

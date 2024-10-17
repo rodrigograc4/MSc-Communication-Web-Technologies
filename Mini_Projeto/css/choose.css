@@ -1,0 +1,66 @@
+@font-face {
+    font-family: 'GameFreak';
+    src: url('/fonts/game-freak-font.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pokemon';
+    src: url('/fonts/pokemon-ds-font.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+.choose-tittle {
+    color: #ffffff;
+    font-size: 4em;
+    margin-bottom: 50px;
+    text-shadow: 4px 4px 0px rgba(0, 0, 0, 1);
+}
+
+.pokemon-options {
+    display: grid;
+    grid-template-columns: repeat(3, 300px);
+    gap: 50px;
+    justify-content: center;
+}
+
+.pokemon-card {
+    background-color: #eeeeee;
+    border: 10px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 1);
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .pokemon-options {
+        grid-template-columns: repeat(2, 300px);
+    }
+}
+
+@media (max-width: 600px) {
+    .pokemon-options {
+        grid-template-columns: 300px;
+    }
+}
+
+.pokemon-image {
+    width: auto;
+    height: 100px;
+    margin: auto;
+}
+
+.pokemon-name {
+    font-size: 2em;
+    margin: auto;
+    text-transform: uppercase;
+}
+
+.pokemon-number {
+    font-size: 1.5em;
+    margin: auto;
+}
