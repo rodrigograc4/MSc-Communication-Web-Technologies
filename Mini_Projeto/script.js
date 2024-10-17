@@ -21,8 +21,12 @@ let selectedMoves = [];
 let playerPokemon = {};
 let enemyPokemon = {};
 
+function capitalize(word) {
+    word = word.toLowerCase();
+    const capitalized = word.charAt(0).toUpperCase() + word.slice(1);
+    return capitalized;
+}
 
-// Iniciar o jogo
 startBtn.addEventListener("click", startGame);
 
 function startGame() {
@@ -64,32 +68,74 @@ loadPokemonOptions();
 
 function selectPokemon(pokemonData) {
     selectedPokemon = pokemonData;
+    console.log("Pokemon Name: ", capitalize(pokemonData.name));
+    console.log("Pokemon Id: ", pokemonData.id);
     choosePokemonScreen.classList.add("hidden");
     chooseMovesScreen.classList.remove("hidden");
+
     loadMoveOptions(pokemonData.moves);
 }
 
-// Carregar 8 movimentos possíveis para o Pokémon selecionado
 async function loadMoveOptions(moves) {
-    const randomMoves = moves.sort(() => 0.5 - Math.random()).slice(0, 10);
+    const randomMoves = moves.sort(() => 0.5 - Math.random()).slice(0, 8);
 
-    randomMoves.forEach(move => {
+    for (const move of randomMoves) {
+        const moveDetails = await fetch(move.move.url).then(res => res.json());
+
+        const power = moveDetails.power || 40;
+        const accuracy = moveDetails.accuracy || 100;
+
         const moveCard = document.createElement('div');
-        moveCard.classList.add("card");
-        moveCard.innerHTML = `<p>${move.move.name}</p>`;
-        moveCard.addEventListener("click", () => selectMove(move));
+        moveCard.classList.add("move-card");
+
+        moveCard.innerHTML = `
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="move-name">${capitalize(move.move.name)}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="move-power">Power: </p>
+                </div>
+                <div class="col-md-6">
+                    <p class="move-power">${power}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="move-power">Accuracy: </p>
+                </div>
+                <div class="col-md-6">
+                    <p class="move-power">${accuracy}</p>
+                </div>
+            </div>
+        `;
+
+        moveCard.addEventListener("click", () => selectMove(move, moveCard));
         moveOptions.appendChild(moveCard);
-    });
+        moveOptions.classList.add('move-options');
+    }
 }
 
-function selectMove(move) {
-    if (selectedMoves.length >= 4) {
-        alert("Você já selecionou 4 movimentos!");
-        return;
+function selectMove(move, moveCard) {
+    if (selectedMoves.includes(move)) {
+        moveCard.classList.remove("selected");
+        selectedMoves = selectedMoves.filter(m => m !== move);
+    } else {
+        if (selectedMoves.length >= 4) {
+            alert("You already selected 4 moves!");
+            return;
+        }
+
+        selectedMoves.push(move);
+        moveCard.classList.add("selected");
     }
-    selectedMoves.push(move);
+
     if (selectedMoves.length === 4) {
         startBattleBtn.classList.remove("hidden");
+    } else {
+        startBattleBtn.classList.add("hidden");
     }
 }
 
