@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/css/loading.css">
     <link rel="stylesheet" href="/css/name.css">
     <link rel="stylesheet" href="/css/choose.css">
+    <link rel="stylesheet" href="/css/battle.css">
 </head>
 
 <body>
@@ -57,14 +58,67 @@
 
         <!-- Tela da batalha -->
         <div id="battle-screen" class="hidden">
-            <h1 class="choose-tittle">VS</h1>
-            <div id="battle-log"></div>
-            <button id="restart-btn" class="hidden">Reiniciar Jogo</button>
+            <div id="loading-battle" class="">
+                <div class="row battle-names-row">
+                    <div class="col-md-4">
+                        <h1 class="player-name"></h1>
+                    </div>
+                    <div class="col-md-4">
+                        <h1 class="battle-tittle">VS</h1>
+                    </div>
+                    <div class="col-md-4">
+                        <h1 class="enemy-name"></h1>
+                    </div>
+                </div>
+            </div>
+            <div id="battle" class="hidden">
+                <div class="row enemy-row">
+                    <div class="col col-md-6">
+                        <div class="enemy-pokemon-info">
+                            <h1 class="enemy-pokemon-name"></h1>
+                            <div class="enemy-pokemon-hp">
+                                <div class="enemy-pokemon-hp-bar"></div>
+                                <h1 class="enemy-pokemon-hp-text"></h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div>
+                            <img src="" class="enemy-pokemon-image">
+                        </div>
+                    </div>
+                </div>
+                <div class="row player-row">
+                    <div class="col-md-6">
+                        <div>
+                            <img src="" class="player-pokemon-image">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="player-pokemon-info">
+                            <h1 class="player-pokemon-name"></h1>
+                            <div class="player-pokemon-hp">
+                                <div class="player-pokemon-hp-bar"></div>
+                                <h1 class="player-pokemon-hp-text"></h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row fight-row">
+                    <div class="col-md-8">
+                        <div id="choose-moves" class="card-container"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div id="fight-button" class="hidden">
+                            <button id="fight-btn">Fight</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <script src="script.js"></script>
-    <script src="loading.js"></script>
+        <script src="script.js"></script>
+        <script src="loading.js"></script>
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

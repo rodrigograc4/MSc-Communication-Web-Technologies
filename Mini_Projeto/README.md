@@ -19,6 +19,11 @@ https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/version
 https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/back/6.png
 ```
 
+**GET Sprite Pokemon GIF**
+```
+https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif
+```
+
 **GET Pokemon Name of Pokemon Number**
 ```
 https://pokeapi.co/api/v2/pokemon/145

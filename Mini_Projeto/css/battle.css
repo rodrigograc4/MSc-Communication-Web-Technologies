@@ -1,0 +1,123 @@
+@font-face {
+    font-family: 'GameFreak';
+    src: url('/fonts/game-freak-font.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pokemon';
+    src: url('/fonts/pokemon-ds-font.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+.battle-names-row {
+    background-color: rgba(189, 0, 0, 0.623);
+    padding: 10px 100px;
+    border-bottom: 7px solid #000000;
+}
+
+.player-name {
+    color: #ffffff;
+    font-size: 7em;
+    text-shadow: 7px 7px 0px rgba(0, 0, 0, 1);
+}
+
+.battle-tittle {
+    color: #ffd000;
+    font-size: 7em;
+    text-shadow: 7px 7px 0px rgb(255, 255, 255);
+    margin: 0 100px;
+}
+
+.enemy-name {
+    color: #ffffff;
+    font-size: 7em;
+    text-shadow: 7px 7px 0px rgba(0, 0, 0, 1);
+}
+
+.player-row,
+.enemy-row {
+    width: 70vw;
+    padding: 50px 0;
+}
+
+.player-pokemon-info,
+.enemy-pokemon-info {
+    padding: 10px 20px;
+    border-radius: 10px;
+    width: 70%;
+}
+
+.player-pokemon-info {
+    margin-left: 30%;
+}
+
+.player-pokemon-name {
+    color: #ffffff;
+    text-shadow: #000000 2px 2px 2px;
+    font-size: 2em;
+    text-align: end;
+}
+
+.enemy-pokemon-name {
+    color: #ffffff;
+    text-shadow: #000000 2px 2px 2px;
+    font-size: 2em;
+    text-align: start;
+}
+
+.player-pokemon-hp,
+.enemy-pokemon-hp {
+    background-color: #333;
+    border: 2px solid #000;
+    width: 100%;
+    height: 25px;
+    position: relative;
+}
+
+.player-pokemon-hp-bar,
+.enemy-pokemon-hp-bar {
+    background-color: #ca3737;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Texto dos HP */
+.player-pokemon-hp-text,
+.enemy-pokemon-hp-text {
+    color: #ffffff;
+    text-shadow: #000000 2px 2px 2px;
+    font-size: 1em;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+}
+
+/* Imagem dos Pokémon */
+.player-pokemon-image,
+.enemy-pokemon-image {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+}
+
+#fight-button {
+    margin-top: 50px;
+    background-color: #333;
+    color: #fff;
+    font-size: 2em;
+    padding: 10px 50px;
+    border: none;
+    border-radius: 5px;
+}
