@@ -1,7 +1,7 @@
 // URLs da API
 const POKEMON_API_URL = 'https://pokeapi.co/api/v2/pokemon/';
 const SPRITE_URL_FRONT = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/';
-const PLAYER_POKEMON_SPRITE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/back/';
+const PLAYER_POKEMON_SPRITE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/';
 const ENEMY_POKEMON_SPRITE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/';
 
 // Elementos do DOM
@@ -170,7 +170,7 @@ function playerPokemon() {
         name: selectedPokemon.name.toUpperCase(),
         moves: selectedMoves.map(move => move.move.name.toUpperCase()),
         hp: selectedPokemon.stats.find(stat => stat.stat.name === 'hp').base_stat * 4,
-        image: `${PLAYER_POKEMON_SPRITE_URL}${selectedPokemon.id}.png`
+        image: `${PLAYER_POKEMON_SPRITE_URL}${selectedPokemon.id}.gif`
     };
 
     console.log("Player Pokemon: ", playerPokemon);
@@ -225,6 +225,14 @@ function startTurn() {
     }
 }
 
+const fightBtn = document.getElementById("fight-btn");
+fightBtn.addEventListener("click", () => {
+    // Mostrar os movimentos
+    document.getElementById("choose-moves").classList.remove("hidden");
+    // Esconder o botão "Fight"
+    fightBtn.classList.add("hidden");
+});
+
 // Turno do jogador
 function playerTurn() {
     console.log("É o turno do jogador!");
@@ -236,9 +244,20 @@ function playerTurn() {
     playerPokemon.moves.forEach((moveName, index) => {
         const moveButton = document.createElement("button");
         moveButton.textContent = moveName;
+        moveButton.classList.add("move-btn");
+
+        // Adicionando evento para usar o movimento
         moveButton.addEventListener("click", () => useMove("player", index));
+
+        // Adicionando o botão ao contêiner
         moveButtons.appendChild(moveButton);
+        moveButtons.classList.add("hidden");
     });
+
+    // Organizar os botões em duas colunas (2 por linha)
+    moveButtons.style.display = "grid";
+    moveButtons.style.gridTemplateColumns = "1fr 1fr";
+    moveButtons.style.gap = "10px";
 }
 
 // Turno do inimigo

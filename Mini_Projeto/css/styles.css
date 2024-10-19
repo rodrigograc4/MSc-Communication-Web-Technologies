@@ -14,9 +14,7 @@
 
 body {
     font-family: 'Pokemon', sans-serif;
-    background-image: url('../images/background.jpg');
-    background-size: cover;
-    background-position: center;
+    background-color: #284b3b;
     margin: 0;
     padding: 0;
     display: flex;
