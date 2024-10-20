@@ -116,7 +116,7 @@
     color: #fff;
     font-size: 2em;
     padding: 10px 50px;
-    border: none;
+    border: 5px solid #272727;
     border-radius: 5px;
     cursor: pointer;
 }

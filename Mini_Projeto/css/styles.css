@@ -67,3 +67,16 @@ h2 {
     width: auto;
     object-fit: contain;
 }
+
+#highscore-btn {
+    background-color: #e29300;
+    color: #fff;
+    font-size: 2em;
+    text-shadow: #000000 2px 2px 2px;
+    border: 2px solid #000;
+    border-radius: 5px;
+    padding: 10px 50px;
+    margin: 0 auto;
+    text-align: center;
+    cursor: pointer;
+}
