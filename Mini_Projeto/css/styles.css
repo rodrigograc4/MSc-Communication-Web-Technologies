@@ -14,7 +14,7 @@
 
 body {
     font-family: 'Pokemon', sans-serif;
-    background-color: #2d4d3d;
+    background-color: #2d6147;
     margin: 0;
     padding: 0;
     display: flex;
@@ -24,7 +24,7 @@ body {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .card-container {
@@ -60,4 +60,10 @@ button:disabled {
 h1,
 h2 {
     color: #333;
+}
+
+#logo {
+    height: 120px;
+    width: auto;
+    object-fit: contain;
 }

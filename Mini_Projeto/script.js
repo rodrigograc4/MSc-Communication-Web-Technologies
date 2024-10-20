@@ -236,40 +236,54 @@ fightBtn.addEventListener("click", () => {
     fightBtn.classList.add("hidden");
 });
 
-// Turno do jogador
+const chooseMovesContainer = document.getElementById("choose-moves");
+
+/// Turno do jogador
 function playerTurn() {
     console.log("É o turno do jogador!");
 
-    // Exibir os botões de movimentos para o jogador escolher
+    // Inicialmente, esconder os botões de movimentos e mostrar o botão "Fight"
     const moveButtons = document.getElementById("choose-moves");
-    moveButtons.innerHTML = "";
+    moveButtons.classList.add("hidden");
+    fightBtn.classList.remove("hidden");
 
+    // Quando o botão "Fight" for clicado
+    fightBtn.addEventListener("click", () => {
+        // Mostrar os botões de movimentos
+        fightBtn.classList.add("hidden");
+        moveButtons.classList.remove("hidden");
+    });
+
+    // Configuração dos botões de movimento
+    moveButtons.innerHTML = "";
     playerPokemon.moves.forEach((moveName, index) => {
         const moveButton = document.createElement("button");
         moveButton.textContent = moveName;
         moveButton.classList.add("move-btn");
 
         // Adicionando evento para usar o movimento
-        moveButton.addEventListener("click", () => useMove("player", index));
+        moveButton.addEventListener("click", () => {
+            useMove("player", index);
+            // Ocultar os botões de movimentos por 3 segundos após a seleção
+            moveButtons.classList.add("hidden");
+        });
 
         // Adicionando o botão ao contêiner
         moveButtons.appendChild(moveButton);
-        moveButtons.classList.add("hidden");
     });
 
     // Organizar os botões em duas colunas (2 por linha)
     moveButtons.style.display = "grid";
     moveButtons.style.gridTemplateColumns = "1fr 1fr";
     moveButtons.style.gap = "10px";
-}
+    moveButtons.style.marginTop = "0px";
 
-// Turno do inimigo
-function enemyTurn() {
-    console.log("É o turno do inimigo!");
-
-    // Escolher um movimento aleatório para o inimigo
-    const randomMoveIndex = Math.floor(Math.random() * enemyPokemon.moves.length);
-    useMove("enemy", randomMoveIndex);
+    // Garantir que todos os botões tenham o mesmo tamanho
+    const moveBtns = document.querySelectorAll('.move-btn');
+    moveBtns.forEach(btn => {
+        btn.style.width = '100%';
+        btn.style.height = '50% - 10px';
+    });
 }
 
 // Função para usar um movimento
@@ -299,6 +313,15 @@ function useMove(user, moveIndex) {
         currentTurn = currentTurn === "player" ? "enemy" : "player";
         setTimeout(startTurn, 1000); // Esperar 1 segundo antes do próximo turno
     }
+}
+
+// Turno do inimigo
+function enemyTurn() {
+    console.log("É o turno do inimigo!");
+
+    // Escolher um movimento aleatório para o inimigo
+    const randomMoveIndex = Math.floor(Math.random() * enemyPokemon.moves.length);
+    useMove("enemy", randomMoveIndex);
 }
 
 // Função para terminar a batalha
