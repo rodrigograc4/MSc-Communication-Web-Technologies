@@ -109,6 +109,13 @@
     z-index: 1;
 }
 
+.player-pokemon-image,
+.enemy-pokemon-image {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}
+
 .enemy-pokemon-image {
     margin-top: 20%;
     margin-right: 20%;

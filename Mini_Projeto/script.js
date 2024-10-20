@@ -176,9 +176,13 @@ function playerPokemon() {
     console.log("Player Pokemon: ", playerPokemon);
 }
 
+let enemyMaxHp = 0;
 async function enemyPokemon() {
     const randomEnemyId = Math.floor(Math.random() * 493) + 1;
     const enemyData = await fetch(`${POKEMON_API_URL}${randomEnemyId}`).then(res => res.json());
+
+    const hpStat = enemyData.stats.find(stat => stat.stat.name === 'hp').base_stat;
+    enemyMaxHp = hpStat * 4; // Armazena o HP máximo do inimigo
 
     enemyPokemon = {
         name: enemyData.name.toUpperCase(),
@@ -200,7 +204,6 @@ function battleFunction() {
     startTurn();
 }
 
-// Atualiza a interface com os dados dos Pokémon
 function updateBattleScreen() {
     document.querySelector(".player-pokemon-name").textContent = playerPokemon.name;
     document.querySelector(".enemy-pokemon-name").textContent = enemyPokemon.name;
@@ -210,7 +213,7 @@ function updateBattleScreen() {
     document.querySelector(".enemy-pokemon-image").src = enemyPokemon.image;
 
     const playerHpPercentage = (playerPokemon.hp / (selectedPokemon.stats.find(stat => stat.stat.name === 'hp').base_stat * 4)) * 100;
-    const enemyHpPercentage = (enemyPokemon.hp / (enemyPokemon.hp)) * 100;
+    const enemyHpPercentage = (enemyPokemon.hp / enemyMaxHp) * 100; // Corrigido
 
     document.querySelector(".player-pokemon-hp-bar").style.width = `${playerHpPercentage}%`;
     document.querySelector(".enemy-pokemon-hp-bar").style.width = `${enemyHpPercentage}%`;
