@@ -393,7 +393,7 @@ function endBattle(winner) {
         updateBattleScreen(); // Atualiza a barra de HP
 
         // meter a imagem do inimigo como transparente
-        document.querySelector(".enemy-pokemon-image").src = "images/transparent.png";
+        document.querySelector(".enemy-pokemon-image").src = "./images/transparent.png";
     }
 
     // Exibe a mensagem de vitória no título da batalha
