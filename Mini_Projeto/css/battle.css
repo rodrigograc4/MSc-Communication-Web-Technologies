@@ -12,6 +12,58 @@
     font-style: normal;
 }
 
+#battle-screen {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+}
+
+/* Battle log container */
+.battle-log {
+    width: 15vw;
+    height: 60vh;
+    background-color: #000000bb;
+    color: white;
+    border-radius: 10px;
+    border: 10px solid #5c8a53;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 1);
+    overflow-y: auto;
+    font-family: 'Pokemon';
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: relative;
+}
+
+.battle-log::-webkit-scrollbar {
+    display: none;
+}
+
+.battle-log-title {
+    font-size: 2em;
+    text-align: center;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 1);
+    position: sticky;
+    top: 0;
+    background-color: #0c1a13;
+    z-index: 1;
+    padding: 13px 10px;
+    margin-top: auto;
+}
+
+/* Lista dos eventos de batalha */
+#log-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0;
+    padding: 0 10px;
+}
+
+/* Estilizando os itens do log */
+#log-list li {
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+
 .backscene {
     background-image: url('/images/fundo.jpg');
     background-size: cover;
@@ -26,28 +78,28 @@
 
 
 .battle-names-row {
-    background-color: rgba(189, 0, 0, 0.623);
+    background-color: #000000bb;
     padding: 10px 100px;
-    border-bottom: 7px solid #000000;
+    margin: 0 auto;
 }
 
 .player-name {
     color: #ffffff;
-    font-size: 7em;
-    text-shadow: 7px 7px 0px rgba(0, 0, 0, 1);
+    font-size: 2em;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 1);
 }
 
 .battle-tittle {
-    color: #ffd000;
-    font-size: 7em;
-    text-shadow: 7px 7px 0px rgb(255, 255, 255);
+    color: #e29300;
+    font-size: 2em;
+    text-shadow: 2px 2px 0px rgb(0, 0, 0);
     margin: 0 100px;
 }
 
 .enemy-name {
     color: #ffffff;
-    font-size: 7em;
-    text-shadow: 7px 7px 0px rgba(0, 0, 0, 1);
+    font-size: 2em;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 1);
 }
 
 .player-pokemon-info,
@@ -117,8 +169,22 @@
 }
 
 .enemy-pokemon-image {
-    margin-top: 20%;
+    margin-top: 10%;
+}
+
+.player-pokemon-image {
     margin-right: 20%;
+}
+
+/* Efeito de dano */
+.flash-damage {
+    content: '';
+    position: relative;
+    top: 0;
+    left: 0;
+    filter: invert(16%) sepia(57%) saturate(5303%) hue-rotate(345deg) brightness(93%) contrast(93%);
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .fight-row {

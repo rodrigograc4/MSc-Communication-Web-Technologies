@@ -158,7 +158,7 @@ async function startBattle() {
     battleScreen.classList.remove("hidden");
 
     setTimeout(() => {
-        loadingBattle.classList.add("hidden");
+        // loadingBattle.classList.add("hidden");
         battle.classList.remove("hidden");
     }, 2000);
 
@@ -294,12 +294,23 @@ function useMove(user, moveIndex) {
     const movePower = 40; // Para simplificar, vamos considerar todos os movimentos com 40 de poder
 
     console.log(`${attacker.name} usou ${moveName}!`);
+    addBattleLog(`${attacker.name} used ${moveName}!`);
 
     // Calcular o dano (simplesmente baseado no poder do movimento para esta implementação)
     const damage = Math.floor(Math.random() * (movePower / 2) + movePower / 2);
     defender.hp -= damage;
 
     console.log(`${defender.name} sofreu ${damage} de dano!`);
+    addBattleLog(`${defender.name} suffered ${damage} damage!`);
+
+    // Adicionar efeito de dano
+    const defenderImage = user === "player" ? document.querySelector(".enemy-pokemon-image") : document.querySelector(".player-pokemon-image");
+    defenderImage.classList.add("flash-damage");
+
+    // Remover o efeito de dano após 300 milissegundos
+    setTimeout(() => {
+        defenderImage.classList.remove("flash-damage");
+    }, 200);
 
     // Atualizar a tela
     updateBattleScreen();
@@ -315,6 +326,17 @@ function useMove(user, moveIndex) {
     }
 }
 
+function addBattleLog(message) {
+    const logList = document.getElementById('log-list');
+    const battleLogContainer = document.querySelector('.battle-log'); // Seleciona o contêiner pai que tem overflow-y
+
+    const logItem = document.createElement('li');
+    logItem.textContent = message;
+    logList.appendChild(logItem);
+
+    // Rolar para o final do contêiner pai, não apenas a lista
+    battleLogContainer.scrollTop = battleLogContainer.scrollHeight;
+}
 // Turno do inimigo
 function enemyTurn() {
     console.log("É o turno do inimigo!");
