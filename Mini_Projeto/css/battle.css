@@ -91,7 +91,7 @@
 }
 
 .battle-tittle {
-    color: #e29300;
+    color: #ffffff;
     font-size: 2em;
     text-shadow: 2px 2px 0px rgb(0, 0, 0);
     margin: 0 100px;
@@ -199,6 +199,19 @@
 }
 
 #fight-btn {
+    background-color: #e29300;
+    color: #fff;
+    font-size: 3em;
+    text-shadow: #000000 2px 2px 2px;
+    border: 2px solid #000;
+    border-radius: 5px;
+    width: 50%;
+    height: 50%;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+#continue-btn {
     background-color: #e29300;
     color: #fff;
     font-size: 3em;
