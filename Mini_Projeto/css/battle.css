@@ -129,6 +129,7 @@
     position: absolute;
     top: 0;
     left: 0;
+    transition: width 1s ease-in-out;
 }
 
 /* Texto dos HP */
@@ -162,14 +163,13 @@
     margin-right: 10vh;
 }
 
-/* Efeito de dano */
 .flash-damage {
     content: '';
     position: relative;
     top: 0;
     left: 0;
-    filter: invert(16%) sepia(57%) saturate(5303%) hue-rotate(345deg) brightness(93%) contrast(93%);
-    opacity: 0.5;
+    filter: brightness(0) saturate(100%) invert(14%) sepia(100%) saturate(7480%) hue-rotate(-10deg) brightness(97%);
+    opacity: 0.6;
     pointer-events: none;
 }
 

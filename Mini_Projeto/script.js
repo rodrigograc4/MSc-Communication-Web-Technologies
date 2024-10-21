@@ -430,11 +430,9 @@ function continueAfterWin(winner) {
         // Esconder o botão "Continue"
         continueBtn.classList.add("hidden");
 
-        // Aumentar o número de vitórias se o jogador vencer
-        if (winner === "player") {
-            victories += 1;
-            document.querySelector(".player-name").textContent = `${playerName} - ${victories} Victor${victories > 1 ? 'ies' : 'y'} `;
-        }
+        victories += 1;
+        document.querySelector(".player-name").textContent = `${playerName} - ${victories} W'} `;
+        document.querySelector(".battle-tittle").textContent = "VS";
 
         document.getElementById('log-list').innerHTML = "";
 
