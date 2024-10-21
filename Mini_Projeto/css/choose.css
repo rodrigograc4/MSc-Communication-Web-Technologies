@@ -1,18 +1,3 @@
-@font-face {
-    font-family: 'GameFreak';
-    src: url('../fonts/game-freak-font.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Pokemon';
-    src: url('../fonts/pokemon-ds-font.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-
 .choose-tittle {
     color: #ffffff;
     font-size: 4em;
@@ -34,18 +19,11 @@
     border-radius: 10px;
     box-shadow: 0 0 30px rgba(0, 0, 0, 1);
     cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
-@media (max-width: 900px) {
-    .pokemon-options {
-        grid-template-columns: repeat(2, 300px);
-    }
-}
-
-@media (max-width: 600px) {
-    .pokemon-options {
-        grid-template-columns: 300px;
-    }
+.pokemon-card:hover {
+    transform: scale(1.05);
 }
 
 .pokemon-image {
@@ -85,31 +63,6 @@
     background-color: #686868;
 }
 
-@media (max-width: 900px) {
-    .move-options {
-        grid-template-columns: repeat(2, 250px);
-    }
-}
-
-@media (max-width: 600px) {
-    .move-options {
-        grid-template-columns: 250px;
-    }
-}
-
-.move-name {
-    font-size: 1.5em;
-    text-transform: uppercase;
-    padding: 0;
-    margin: 0;
-}
-
-.move-power {
-    font-size: 1.5em;
-    padding: 0;
-    margin: 0;
-}
-
 #start-battle-btn {
     margin-top: 50px;
     background-color: #333;
@@ -119,4 +72,65 @@
     border: 5px solid #272727;
     border-radius: 5px;
     cursor: pointer;
+}
+
+/* Responsividade */
+
+/* Para telas com largura menor que 900px (tablets) */
+@media (max-width: 900px) {
+    .pokemon-options {
+        grid-template-columns: repeat(2, 300px);
+        gap: 30px;
+    }
+
+    .move-options {
+        grid-template-columns: repeat(2, 250px);
+        gap: 30px;
+    }
+
+    .choose-tittle {
+        font-size: 3em;
+        margin-bottom: 40px;
+    }
+
+    .pokemon-card,
+    .move-card {
+        padding: 15px;
+    }
+}
+
+/* Para telas com largura menor que 600px (smartphones) */
+@media (max-width: 600px) {
+    .pokemon-options {
+        grid-template-columns: 300px;
+        gap: 20px;
+    }
+
+    .move-options {
+        grid-template-columns: 250px;
+        gap: 20px;
+    }
+
+    .choose-tittle {
+        font-size: 2em;
+        margin-bottom: 30px;
+    }
+
+    .pokemon-card,
+    .move-card {
+        padding: 10px;
+        border: 5px solid #ccc;
+    }
+
+    .pokemon-name,
+    .pokemon-number,
+    .move-name,
+    .move-power {
+        font-size: 1.2em;
+    }
+
+    #start-battle-btn {
+        font-size: 1.5em;
+        padding: 8px 30px;
+    }
 }

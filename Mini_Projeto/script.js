@@ -46,27 +46,36 @@ async function loadPokemonOptions() {
     const randomPokemonIds = Array.from({ length: 6 }, () => Math.floor(Math.random() * 493) + 1);
 
     for (let id of randomPokemonIds) {
+        // Buscar dados do Pokémon da API
         const pokemonData = await fetch(`${POKEMON_API_URL}${id}`).then(res => res.json());
+
+        // Criar o card do Pokémon
         const card = document.createElement('div');
         card.classList.add("pokemon-card");
 
+        // Adicionar HTML dentro do card
         card.innerHTML = `
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="${SPRITE_URL_FRONT}${pokemonData.id}.png" alt="${pokemonData.name}" class="pokemon-image">
-                </div>
-                <div class="col-md-8">
+            <div class="pokemon-card-content">
+                <img src="${SPRITE_URL_FRONT}${pokemonData.id}.png" alt="${pokemonData.name}" class="pokemon-image">
+                <div class="pokemon-info">
                     <p class="pokemon-name">${pokemonData.name}</p>
                     <p class="pokemon-number">#${pokemonData.id}</p>
                 </div>
             </div>
         `;
 
+        // Evento de clique para selecionar o Pokémon
         card.addEventListener("click", () => selectPokemon(pokemonData));
+
+        // Adicionar o card ao container de opções
         pokemonOptions.appendChild(card);
-        pokemonOptions.classList.add('pokemon-options');
     }
+
+    // Garantir que a classe 'pokemon-options' seja aplicada
+    pokemonOptions.classList.add('pokemon-options');
 }
+
+// Carregar as opções de Pokémon ao iniciar
 loadPokemonOptions();
 
 function selectPokemon(pokemonData) {
