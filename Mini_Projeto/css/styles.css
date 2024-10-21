@@ -94,9 +94,14 @@ h2 {
         padding: 10px 30px;
     }
 
-    .card {
-        width: 80px;
-        padding: 8px;
+    #game-container {
+        display: none;
+    }
+
+    .not-supported {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
     }
 
     button {
@@ -107,6 +112,8 @@ h2 {
     h1,
     h2 {
         font-size: 1.5em;
+        color: #ffffff;
+        text-shadow: #000000 2px 2px 2px;
     }
 }
 
@@ -118,11 +125,6 @@ h2 {
     #highscore-btn {
         font-size: 1.2em;
         padding: 5px 20px;
-    }
-
-    .card {
-        width: 60px;
-        padding: 5px;
     }
 
     button {
