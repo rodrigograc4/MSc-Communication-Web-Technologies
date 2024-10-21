@@ -90,44 +90,47 @@ function selectPokemon(pokemonData) {
 
 async function loadMoveOptions(moves) {
     const randomMoves = moves.sort(() => 0.5 - Math.random()).slice(0, 8);
+    moveOptions.innerHTML = '';
 
     for (const move of randomMoves) {
-        // Fetch the move details from the API, if not found, skip the move
-        const moveDetails = await fetch(move.move.url).then(res => res.json()).catch(err => console.log(err));
+        try {
+            const moveDetails = await fetch(move.move.url).then(res => res.json());
+            const power = moveDetails.power || 40;
+            const accuracy = moveDetails.accuracy || 100;
 
-        const power = moveDetails.power || 40;
-        const accuracy = moveDetails.accuracy || 100;
+            const moveCard = document.createElement('div');
+            moveCard.classList.add("move-card");
 
-        const moveCard = document.createElement('div');
-        moveCard.classList.add("move-card");
+            moveCard.innerHTML = `
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="move-name">${capitalize(move.move.name)}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="move-power">Power: </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="move-power">${power}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="move-power">Accuracy: </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="move-power">${accuracy}</p>
+                    </div>
+                </div>
+            `;
 
-        moveCard.innerHTML = `
-            <div class="row">
-                <div class="col-md-12">
-                    <p class="move-name">${capitalize(move.move.name)}</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="move-power">Power: </p>
-                </div>
-                <div class="col-md-6">
-                    <p class="move-power">${power}</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="move-power">Accuracy: </p>
-                </div>
-                <div class="col-md-6">
-                    <p class="move-power">${accuracy}</p>
-                </div>
-            </div>
-        `;
-
-        moveCard.addEventListener("click", () => selectMove(move, moveCard));
-        moveOptions.appendChild(moveCard);
-        moveOptions.classList.add('move-options');
+            moveCard.addEventListener("click", () => selectMove(move, moveCard));
+            moveOptions.appendChild(moveCard);
+            moveOptions.classList.add('move-options');
+        } catch (error) {
+            console.error("Error fetching move details:", error);
+        }
     }
 }
 
@@ -145,12 +148,9 @@ function selectMove(move, moveCard) {
         moveCard.classList.add("selected");
     }
 
-    if (selectedMoves.length === 4) {
-        startBattleBtn.classList.remove("hidden");
-    } else {
-        startBattleBtn.classList.add("hidden");
-    }
+    startBattleBtn.classList.toggle("hidden", selectedMoves.length < 4);
 }
+
 
 function createPlayerPokemon() {
     playerPokemon = {
