@@ -193,7 +193,7 @@ async function startBattle() {
     battleFunction();
 }
 
-async function restartBattle() {
+async function continueBattle() {
 
     createPlayerPokemon();
     await createEnemyPokemon();
@@ -371,30 +371,40 @@ function endBattle(winner) {
 
     const moveButtons = document.getElementById("choose-moves");
     const fightBtn = document.getElementById("fight-btn");
-    const continueBtn = document.getElementById("continue-btn");
     moveButtons.classList.add("hidden");
     fightBtn.classList.add("hidden");
 
     //limpar lista de logs
     document.getElementById('log-list').innerHTML = "";
 
+    if (winner === "player") {
+        continueAfterWin(winner);
+    }
+
+    if (winner === "enemy") {
+        restartAfterLose(winner);
+    }
+
+
+}
+
+function continueAfterWin(winner) {
+    const continueBtn = document.getElementById("continue-btn");
+
     // Adiciona a mensagem de vitória ao log
     addBattleLog(`${playerName} WON THE BATTLE!`);
     addBattleLog(`${enemyPokemon.name} has fainted!`);
 
-
     // Define o nome do vencedor para exibir a mensagem correta
-    const winnerName = winner === "player" ? playerName : enemyPokemon.name;
-    const battleMessage = winner === "player" ? `${winnerName} WON!` : `${winnerName} WON!`;
+    const winnerName = playerName;
+    const battleMessage = `${winnerName} WON!`;
 
     // Atualiza a vida do inimigo para 0 visualmente se o jogador vencer
-    if (winner === "player") {
-        enemyPokemon.hp = 0;
-        updateBattleScreen(); // Atualiza a barra de HP
+    enemyPokemon.hp = 0;
+    updateBattleScreen(); // Atualiza a barra de HP
 
-        // meter a imagem do inimigo como transparente
-        document.querySelector(".enemy-pokemon-image").src = "./images/transparent.png";
-    }
+    // meter a imagem do inimigo como transparente
+    document.querySelector(".enemy-pokemon-image").src = "./images/transparent.png";
 
     // Exibe a mensagem de vitória no título da batalha
     document.querySelector(".player-name").textContent = battleMessage;
@@ -414,12 +424,47 @@ function endBattle(winner) {
         // Aumentar o número de vitórias se o jogador vencer
         if (winner === "player") {
             victories += 1;
-            document.querySelector(".player-name").textContent = `${playerName} - ${victories} Victor${victories > 1 ? 'ies' : 'y'}`;
+            document.querySelector(".player-name").textContent = `${playerName} - ${victories} Victor${victories > 1 ? 'ies' : 'y'} `;
         }
 
         document.getElementById('log-list').innerHTML = "";
 
-        // Chama a função para reiniciar a batalha após o clique
-        restartBattle();
+        // Chama a função para continue a batalha após o clique
+        continueBattle();
     });
+}
+
+function restartAfterLose(winner) {
+    const continueBtn = document.getElementById("continue-btn");
+
+    // Adiciona a mensagem de vitória ao log
+    addBattleLog(`${enemyPokemon.name} WON THE BATTLE!`);
+    addBattleLog(`${playerName} Pokemon has fainted!`);
+
+    // Define o nome do vencedor para exibir a mensagem correta
+    const winnerName = enemyPokemon.name;
+    const battleMessage = `${winnerName} WON!`;
+
+    playerPokemon.hp = 0;
+    updateBattleScreen(); // Atualiza a barra de HP
+
+    // meter a imagem do jogador como transparente
+    document.querySelector(".player-pokemon-image").src = "./images/transparent.png";
+
+    // Exibe a mensagem de vitória no título da batalha
+    document.querySelector(".enemy-name").textContent = battleMessage;
+
+    // Esconde o nome do Pokémon inimigo e o título
+    document.querySelector(".battle-tittle").textContent = "";
+    document.querySelector(".player-name").textContent = "";
+
+    // Mudar o botão "Fight" para "Continue"    
+    continueBtn.classList.remove("hidden");
+
+    // Mudar o botão "Fight" para "Restart"
+    continueBtn.addEventListener("click", async () => {
+        //reload the page
+        location.reload();
+    }
+    );
 }
