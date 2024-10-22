@@ -1,10 +1,10 @@
-// URLs da API
+// URLs for APIs
 const POKEMON_API_URL = 'https://pokeapi.co/api/v2/pokemon/';
 const SPRITE_URL_FRONT = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/';
 const PLAYER_POKEMON_SPRITE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/';
 const ENEMY_POKEMON_SPRITE_URL = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/';
 
-// Elementos do DOM
+// DOM Elements
 const startScreen = document.getElementById("start-screen");
 const choosePokemonScreen = document.getElementById("choose-pokemon-screen");
 const chooseMovesScreen = document.getElementById("choose-moves-screen");
@@ -20,40 +20,37 @@ const battle = document.getElementById("battle");
 
 let selectedPokemon = null;
 let selectedMoves = [];
+let playerName = null;
 
+// Capitalize a given word
 function capitalize(word) {
     word = word.toLowerCase();
     const capitalized = word.charAt(0).toUpperCase() + word.slice(1);
     return capitalized;
 }
 
+// Start the game
 startBtn.addEventListener("click", startGame);
-let playerName = null;
-
 function startGame() {
-    playerName = playerNameInput.value;
-    if (playerName === "") {
+    playerName = playerNameInput.value.toUpperCase();
+    if (!playerName) {
         alert("Please enter your Name!");
         return;
     }
-    playerName = playerName.toUpperCase();
     console.log("Player Name: ", playerName);
     startScreen.classList.add("hidden");
     choosePokemonScreen.classList.remove("hidden");
 }
 
+// Load Pokemon options to choose from
 async function loadPokemonOptions() {
     const randomPokemonIds = Array.from({ length: 6 }, () => Math.floor(Math.random() * 493) + 1);
 
     for (let id of randomPokemonIds) {
-        // Buscar dados do Pokémon da API
         const pokemonData = await fetch(`${POKEMON_API_URL}${id}`).then(res => res.json());
 
-        // Criar o card do Pokémon
         const card = document.createElement('div');
         card.classList.add("pokemon-card");
-
-        // Adicionar HTML dentro do card
         card.innerHTML = `
             <div class="pokemon-card-content">
                 <img src="${SPRITE_URL_FRONT}${pokemonData.id}.png" alt="${pokemonData.name}" class="pokemon-image">
@@ -64,30 +61,25 @@ async function loadPokemonOptions() {
             </div>
         `;
 
-        // Evento de clique para selecionar o Pokémon
         card.addEventListener("click", () => selectPokemon(pokemonData));
-
-        // Adicionar o card ao container de opções
         pokemonOptions.appendChild(card);
     }
-
-    // Garantir que a classe 'pokemon-options' seja aplicada
     pokemonOptions.classList.add('pokemon-options');
 }
 
-// Carregar as opções de Pokémon ao iniciar
 loadPokemonOptions();
 
+// Select a Pokemon
 function selectPokemon(pokemonData) {
     selectedPokemon = pokemonData;
     console.log("Pokemon Name: ", capitalize(selectedPokemon.name));
     console.log("Pokemon Id: ", selectedPokemon.id);
     choosePokemonScreen.classList.add("hidden");
     chooseMovesScreen.classList.remove("hidden");
-
     loadMoveOptions(selectedPokemon.moves);
 }
 
+// Load move options to choose from
 async function loadMoveOptions(moves) {
     const randomMoves = moves.sort(() => 0.5 - Math.random()).slice(0, 8);
     moveOptions.innerHTML = '';
@@ -100,7 +92,6 @@ async function loadMoveOptions(moves) {
 
             const moveCard = document.createElement('div');
             moveCard.classList.add("move-card");
-
             moveCard.innerHTML = `
                 <div class="row">
                     <div class="col-md-12">
@@ -134,6 +125,7 @@ async function loadMoveOptions(moves) {
     }
 }
 
+// Select a move
 function selectMove(move, moveCard) {
     if (selectedMoves.includes(move)) {
         moveCard.classList.remove("selected");
@@ -143,37 +135,48 @@ function selectMove(move, moveCard) {
             alert("You already selected 4 moves!");
             return;
         }
-
         selectedMoves.push(move);
         moveCard.classList.add("selected");
     }
-
-    startBattleBtn.classList.toggle("hidden", selectedMoves.length < 4);
+    startBattleBtn.classList.toggle("hidden", selectedMoves.length < 1);
 }
 
-
+// Create player's Pokemon
 function createPlayerPokemon() {
+    playerBaseHp = selectedPokemon.stats.find(stat => stat.stat.name === 'hp').base_stat;
+    playerMaxHp = calculateHP(playerBaseHp);
+
     playerPokemon = {
         name: selectedPokemon.name.toUpperCase(),
         moves: selectedMoves.map(move => move.move.name.toUpperCase()),
-        hp: selectedPokemon.stats.find(stat => stat.stat.name === 'hp').base_stat * 4,
+        hp: playerMaxHp,
+        attack: selectedPokemon.stats.find(stat => stat.stat.name === 'attack').base_stat,
+        defense: selectedPokemon.stats.find(stat => stat.stat.name === 'defense').base_stat,
+        special_attack: selectedPokemon.stats.find(stat => stat.stat.name === 'special-attack').base_stat,
+        special_defense: selectedPokemon.stats.find(stat => stat.stat.name === 'special-defense').base_stat,
+        speed: selectedPokemon.stats.find(stat => stat.stat.name === 'speed').base_stat,
         image: `${PLAYER_POKEMON_SPRITE_URL}${selectedPokemon.id}.gif`
     };
-
     console.log("Player Pokemon: ", playerPokemon);
 }
 
+// Create enemy Pokemon
 let enemyMaxHp = 0;
 async function createEnemyPokemon() {
     const randomEnemyId = Math.floor(Math.random() * 493) + 1;
     const enemyData = await fetch(`${POKEMON_API_URL}${randomEnemyId}`).then(res => res.json());
 
-    const hpStat = enemyData.stats.find(stat => stat.stat.name === 'hp').base_stat;
-    enemyMaxHp = hpStat * 4; // Armazena o HP máximo do inimigo
+    enemyBaseHp = enemyData.stats.find(stat => stat.stat.name === 'hp').base_stat;
+    enemyMaxHp = calculateHP(enemyBaseHp);
 
     enemyPokemon = {
         name: enemyData.name.toUpperCase(),
-        hp: enemyData.stats.find(stat => stat.stat.name === 'hp').base_stat * 4,
+        hp: enemyMaxHp,
+        attack: enemyData.stats.find(stat => stat.stat.name === 'attack').base_stat,
+        defense: enemyData.stats.find(stat => stat.stat.name === 'defense').base_stat,
+        special_attack: enemyData.stats.find(stat => stat.stat.name === 'special-attack').base_stat,
+        special_defense: enemyData.stats.find(stat => stat.stat.name === 'special-defense').base_stat,
+        speed: enemyData.stats.find(stat => stat.stat.name === 'speed').base_stat,
         moves: enemyData.moves.sort(() => 0.5 - Math.random()).slice(0, 4).map(move => move.move.name.toUpperCase()),
         image: `${ENEMY_POKEMON_SPRITE_URL}${randomEnemyId}.gif`
     };
@@ -182,55 +185,52 @@ async function createEnemyPokemon() {
     console.log("Enemy Pokemon: ", enemyPokemon);
 }
 
-// Iniciar a batalha
+// Function to calculate HP
+function calculateHP(baseHP) {
+    const level = 100;
+    const iv = 31;
+    const ev = 252;
+    const hp = Math.floor(((2 * baseHP + iv + (ev / 4)) * level) / 100) + level + 10;
+    return hp;
+}
+
+// Start the battle
 startBattleBtn.addEventListener("click", startBattle);
 async function startBattle() {
     createPlayerPokemon();
     await createEnemyPokemon();
-
-    // Inserir os nomes do jogador e do Pokémon inimigo no HTML
     document.querySelector(".player-name").textContent = playerName;
     document.querySelector(".enemy-name").textContent = enemyPokemon.name;
 
     chooseMovesScreen.classList.add("hidden");
     battleScreen.classList.remove("hidden");
 
-    setTimeout(() => {
-        battle.classList.remove("hidden");
-    }, 2000);
-
+    setTimeout(() => battle.classList.remove("hidden"), 2000);
     battleFunction();
 }
 
+// Continue the battle after winning
 async function continueBattle() {
-
     createPlayerPokemon();
     await createEnemyPokemon();
-
-    // Inserir os nomes do jogador e do Pokémon inimigo no HTML
     document.querySelector(".enemy-name").textContent = enemyPokemon.name;
 
-    const continueBtn = document.getElementById("continue-btn");
-
-    continueBtn.classList.add("hidden");
+    document.getElementById("continue-btn").classList.add("hidden");
     battleScreen.classList.remove("hidden");
 
-    setTimeout(() => {
-        battle.classList.remove("hidden");
-    }, 2000);
-
+    setTimeout(() => battle.classList.remove("hidden"), 2000);
     battleFunction();
 }
 
-let currentTurn = "player"; // Começamos com o turno do jogador
-
-// Função para iniciar a batalha
+// Battle logic management
+let currentTurn = "player";
 function battleFunction() {
-    console.log("A batalha começou!");
+    console.log("The battle has begun!");
     updateBattleScreen();
     startTurn();
 }
 
+// Update the battle screen with current stats
 function updateBattleScreen() {
     document.querySelector(".player-pokemon-name").textContent = playerPokemon.name;
     document.querySelector(".enemy-pokemon-name").textContent = enemyPokemon.name;
@@ -239,14 +239,14 @@ function updateBattleScreen() {
     document.querySelector(".player-pokemon-image").src = playerPokemon.image;
     document.querySelector(".enemy-pokemon-image").src = enemyPokemon.image;
 
-    const playerHpPercentage = (playerPokemon.hp / (selectedPokemon.stats.find(stat => stat.stat.name === 'hp').base_stat * 4)) * 100;
-    const enemyHpPercentage = (enemyPokemon.hp / enemyMaxHp) * 100; // Corrigido
+    const playerHpPercentage = (playerPokemon.hp / playerMaxHp) * 100;
+    const enemyHpPercentage = (enemyPokemon.hp / enemyMaxHp) * 100;
 
     document.querySelector(".player-pokemon-hp-bar").style.width = `${playerHpPercentage}%`;
     document.querySelector(".enemy-pokemon-hp-bar").style.width = `${enemyHpPercentage}%`;
 }
 
-// Função para iniciar o turno
+// Function to start the turn
 function startTurn() {
     if (currentTurn === "player") {
         playerTurn();
@@ -257,55 +257,42 @@ function startTurn() {
 
 const fightBtn = document.getElementById("fight-btn");
 fightBtn.addEventListener("click", () => {
-    // Mostrar os movimentos
     document.getElementById("choose-moves").classList.remove("hidden");
-    // Esconder o botão "Fight"
     fightBtn.classList.add("hidden");
 });
 
 const chooseMovesContainer = document.getElementById("choose-moves");
 
-/// Turno do jogador
+// Function to handle the player's turn
 function playerTurn() {
-    console.log("É o turno do jogador!");
-
-    // Inicialmente, esconder os botões de movimentos e mostrar o botão "Fight"
     const moveButtons = document.getElementById("choose-moves");
     moveButtons.classList.add("hidden");
     fightBtn.classList.remove("hidden");
 
-    // Quando o botão "Fight" for clicado
     fightBtn.addEventListener("click", () => {
-        // Mostrar os botões de movimentos
         fightBtn.classList.add("hidden");
         moveButtons.classList.remove("hidden");
     });
 
-    // Configuração dos botões de movimento
     moveButtons.innerHTML = "";
     playerPokemon.moves.forEach((moveName, index) => {
         const moveButton = document.createElement("button");
         moveButton.textContent = moveName;
         moveButton.classList.add("move-btn");
 
-        // Adicionando evento para usar o movimento
         moveButton.addEventListener("click", () => {
             useMove("player", index);
-            // Ocultar os botões de movimentos por 3 segundos após a seleção
             moveButtons.classList.add("hidden");
         });
 
-        // Adicionando o botão ao contêiner
         moveButtons.appendChild(moveButton);
     });
 
-    // Organizar os botões em duas colunas (2 por linha)
     moveButtons.style.display = "grid";
     moveButtons.style.gridTemplateColumns = "1fr 1fr";
     moveButtons.style.gap = "10px";
     moveButtons.style.marginTop = "0px";
 
-    // Garantir que todos os botões tenham o mesmo tamanho
     const moveBtns = document.querySelectorAll('.move-btn');
     moveBtns.forEach(btn => {
         btn.style.width = '100%';
@@ -313,77 +300,103 @@ function playerTurn() {
     });
 }
 
-// Função para usar um movimento
-function useMove(user, moveIndex) {
+// Function to execute a move
+async function useMove(user, moveIndex) {
     const attacker = user === "player" ? playerPokemon : enemyPokemon;
     const defender = user === "player" ? enemyPokemon : playerPokemon;
     const moveName = attacker.moves[moveIndex];
-    const movePower = 40; // Para simplificar, vamos considerar todos os movimentos com 40 de poder
 
-    console.log(`${attacker.name} usou ${moveName}!`);
+    let movePower = 40;
+    let moveAccuracy = 100;
+    try {
+        let moveUrl;
+        if (user === "player") {
+            const playerMove = selectedMoves.find(move => move.move.name.toUpperCase() === moveName);
+            moveUrl = playerMove ? playerMove.move.url : null;
+        } else {
+            const moveDetails = enemyPokemon.moves[moveIndex];
+            moveUrl = `https://pokeapi.co/api/v2/move/${moveDetails.toLowerCase()}/`;
+        }
+
+        if (moveUrl) {
+            const moveData = await fetch(moveUrl).then(res => res.json());
+            movePower = moveData.power || 40;
+            moveAccuracy = moveData.accuracy || 100;
+        }
+    } catch (error) {
+        console.error("Error fetching move details from API:", error);
+    }
+
+    const hitChance = Math.random() * 100;
+    if (hitChance > moveAccuracy) {
+        addBattleLog(`${attacker.name} used ${moveName}, but it missed!`);
+        currentTurn = currentTurn === "player" ? "enemy" : "player";
+        setTimeout(startTurn, 1000);
+        return;
+    }
+
+
     addBattleLog(`${attacker.name} used ${moveName}!`);
 
-    // Calcular o dano (simplesmente baseado no poder do movimento para esta implementação)
-    const damage = Math.floor(Math.random() * (movePower / 2) + movePower / 2);
+    const damage = damageCalculation(attacker, defender, movePower);
     defender.hp -= damage;
 
-    console.log(`${defender.name} sofreu ${damage} de dano!`);
     addBattleLog(`${defender.name} suffered ${damage} damage!`);
 
-    // Adicionar efeito de dano
     const defenderImage = user === "player" ? document.querySelector(".enemy-pokemon-image") : document.querySelector(".player-pokemon-image");
     defenderImage.classList.add("flash-damage");
 
-    // Remover o efeito de dano após 300 milissegundos
     setTimeout(() => {
         defenderImage.classList.remove("flash-damage");
     }, 200);
 
-    // Atualizar a tela
     updateBattleScreen();
 
-    // Verificar se o Pokémon defensor ainda tem HP
     if (defender.hp <= 0) {
         defender.hp = 0;
         endBattle(user);
     } else {
-        // Alternar o turno
         currentTurn = currentTurn === "player" ? "enemy" : "player";
-        setTimeout(startTurn, 1000); // Esperar 1 segundo antes do próximo turno
+        setTimeout(startTurn, 1000);
     }
 }
 
+// Function to calculate the damage
+function damageCalculation(attacker, defender, movePower) {
+    const attackerLevel = 100;
+    const attackAverage = (attacker.attack + attacker.special_attack) / 2;
+    const defenseAverage = (defender.defense + defender.special_defense) / 2;
+    const moveDamage = Math.floor(((((2 * attackerLevel) / 5 + 2) * movePower * (attackAverage / defenseAverage)) / 50) + 2);
+    return moveDamage;
+}
+
+// Function to add messages to the battle log
 function addBattleLog(message) {
     const logList = document.getElementById('log-list');
-    const battleLogContainer = document.querySelector('.battle-log'); // Seleciona o contêiner pai que tem overflow-y
+    const battleLogContainer = document.querySelector('.battle-log');
 
     const logItem = document.createElement('li');
     logItem.textContent = message;
     logList.appendChild(logItem);
 
-    // Rolar para o final do contêiner pai, não apenas a lista
     battleLogContainer.scrollTop = battleLogContainer.scrollHeight;
 }
-// Turno do inimigo
-function enemyTurn() {
-    console.log("É o turno do inimigo!");
 
-    // Escolher um movimento aleatório para o inimigo
+// Function to handle the enemy's turn
+function enemyTurn() {
     const randomMoveIndex = Math.floor(Math.random() * enemyPokemon.moves.length);
     useMove("enemy", randomMoveIndex);
 }
 
-let victories = 0; // Variável para contar o número de vitórias
+let victories = 0; // Variable to count the number of victories
 
+// Function to handle the end of the battle
 function endBattle(winner) {
-    console.log("A batalha acabou!");
-
     const moveButtons = document.getElementById("choose-moves");
     const fightBtn = document.getElementById("fight-btn");
     moveButtons.classList.add("hidden");
     fightBtn.classList.add("hidden");
 
-    //limpar lista de logs
     document.getElementById('log-list').innerHTML = "";
 
     if (winner === "player") {
@@ -393,85 +406,62 @@ function endBattle(winner) {
     if (winner === "enemy") {
         restartAfterLose(winner);
     }
-
-
 }
 
+// Function to continue the game after a win
 function continueAfterWin(winner) {
     const continueBtn = document.getElementById("continue-btn");
 
-    // Adiciona a mensagem de vitória ao log
     addBattleLog(`${playerName} WON THE BATTLE!`);
     addBattleLog(`${enemyPokemon.name} has fainted!`);
 
-    // Define o nome do vencedor para exibir a mensagem correta
     const winnerName = playerName;
     const battleMessage = `${winnerName} WON!`;
 
-    // Atualiza a vida do inimigo para 0 visualmente se o jogador vencer
     enemyPokemon.hp = 0;
-    updateBattleScreen(); // Atualiza a barra de HP
+    updateBattleScreen();
 
-    // meter a imagem do inimigo como transparente
     document.querySelector(".enemy-pokemon-image").src = "./images/transparent.png";
-
-    // Exibe a mensagem de vitória no título da batalha
     document.querySelector(".player-name").textContent = battleMessage;
-
-    // Esconde o nome do Pokémon inimigo e o título
     document.querySelector(".battle-tittle").textContent = "";
     document.querySelector(".enemy-name").textContent = "";
 
-    // Mudar o botão "Fight" para "Continue"    
     continueBtn.classList.remove("hidden");
 
-    // Configurar a ação ao clicar no botão "Continue"
     continueBtn.addEventListener("click", async () => {
-        // Esconder o botão "Continue"
         continueBtn.classList.add("hidden");
 
         victories += 1;
-        document.querySelector(".player-name").textContent = `${playerName} - ${victories} W'} `;
+        document.querySelector(".player-name").textContent = `${playerName} - ${victories} W`;
         document.querySelector(".battle-tittle").textContent = "VS";
 
         document.getElementById('log-list').innerHTML = "";
 
-        // Chama a função para continue a batalha após o clique
         continueBattle();
     });
 }
 
+// Function to restart the game after a loss
 function restartAfterLose(winner) {
     const continueBtn = document.getElementById("continue-btn");
 
-    // Adiciona a mensagem de vitória ao log
     addBattleLog(`${enemyPokemon.name} WON THE BATTLE!`);
     addBattleLog(`${playerName} Pokemon has fainted!`);
 
-    // Define o nome do vencedor para exibir a mensagem correta
     const winnerName = enemyPokemon.name;
     const battleMessage = `${winnerName} WON!`;
 
     playerPokemon.hp = 0;
-    updateBattleScreen(); // Atualiza a barra de HP
+    updateBattleScreen();
 
-    // meter a imagem do jogador como transparente
     document.querySelector(".player-pokemon-image").src = "./images/transparent.png";
-
-    // Exibe a mensagem de vitória no título da batalha
     document.querySelector(".enemy-name").textContent = battleMessage;
-
-    // Esconde o nome do Pokémon inimigo e o título
     document.querySelector(".battle-tittle").textContent = "";
     document.querySelector(".player-name").textContent = "";
 
-    // Mudar o botão "Fight" para "Continue"    
     continueBtn.classList.remove("hidden");
 
-    // Mudar o botão "Fight" para "Restart"
     continueBtn.addEventListener("click", async () => {
-        //reload the page
         location.reload();
-    }
-    );
+    });
 }

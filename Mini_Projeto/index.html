@@ -23,6 +23,7 @@
     <div id="loading-screen" class="loading-screen">
         <div class="loading-text">Apollo Company</div>
     </div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
@@ -34,11 +35,10 @@
             </ul>
         </div>
     </nav>
-    <!-- Navbar -->
 
     <!-- Game Container -->
     <div id="game-container">
-        <!-- Tela inicial para pedir o nome do jogador -->
+        <!-- Name Card -->
         <div id="start-screen">
             <h1 class="welcome">Welcome to Poke Apollo!</h1>
             <div class="name-card">
@@ -55,27 +55,25 @@
             <button id="start-btn">Continue</button>
         </div>
 
-        <!-- Tela de escolha de Pokémon -->
+        <!-- Choose Pokemon -->
         <div id="choose-pokemon-screen" class="choose-stuff hidden">
             <h1 class="choose-tittle">Choose your Pokemon:</h1>
             <div id="pokemon-options" class="card-container"></div>
         </div>
 
-        <!-- Tela de escolha de movimentos -->
+        <!-- Choose Moves -->
         <div id="choose-moves-screen" class="choose-stuff hidden">
             <h1 class="choose-tittle">Choose 4 Moves for your Pokemon:</h1>
             <div id="move-options" class="card-container"></div>
             <button id="start-battle-btn" class="hidden">Start Battle</button>
         </div>
 
-        <!-- Tela da batalha -->
+        <!-- Battle -->
         <div id="battle-screen" class="hidden">
             <div class="battle-log">
                 <div id="battle-log" class="battle-log-container">
                     <h3 class="battle-log-title">BATTLE LOG</h3>
-                    <ul id="log-list">
-                        <!-- Logs of the battle will be appended here -->
-                    </ul>
+                    <ul id="log-list"></ul>
                 </div>
             </div>
             <div class="backscene">
@@ -143,6 +141,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Not Supported -->
     <div class="not-supported hidden">
         <h1>It's not possible to play in this dimensions.</h1>
     </div>
