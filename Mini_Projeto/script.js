@@ -421,7 +421,6 @@ async function useMove(user, moveIndex) {
     if (hitChance > moveAccuracy) {
         addBattleLog(`${attacker.name} used ${moveName}, but it missed!`);
         currentTurn = currentTurn === "player" ? "enemy" : "player";
-        setTimeout(startTurn, 1000);
         return;
     }
 
@@ -447,7 +446,6 @@ async function useMove(user, moveIndex) {
         endBattle(user);
     } else {
         currentTurn = currentTurn === "player" ? "enemy" : "player";
-        setTimeout(startTurn, 1000);
     }
 }
 
