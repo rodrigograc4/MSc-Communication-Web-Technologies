@@ -31,7 +31,7 @@ async function getHighscoreById(username) {
 }
 
 // Add highscore to the database
-async function addHighscore(username, score) {
+async function addHighscore(username, pokemon, score) {
     if (!username || score === undefined) {
         console.error('Username or score is missing!');
         return;
@@ -42,7 +42,10 @@ async function addHighscore(username, score) {
     if (currentHighscore === null || score > currentHighscore) {
         console.log("New Score: ", score);
         const cityRef = db.collection('highscores').doc(username);
-        await cityRef.set({ highscore: score }, { merge: true });
+        await cityRef.set({
+            highscore: score,
+            pokemon: pokemon
+        });
         console.log("Highscore added!");
     } else {
         console.log("Score is lower than current highscore:", currentHighscore);
@@ -583,7 +586,7 @@ function handleContinueBattle() {
 async function restartAfterLose() {
     const continueBtn = document.getElementById("continue-btn");
 
-    await addHighscore(playerName, victories);
+    await addHighscore(playerName, playerPokemon.name, victories);
 
     addBattleLog(`${enemyPokemon.name} WON THE BATTLE!`);
     addBattleLog(`${playerName} Pokemon has fainted!`);

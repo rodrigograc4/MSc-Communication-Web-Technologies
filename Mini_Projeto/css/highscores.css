@@ -1,0 +1,60 @@
+.highscore-table {
+    width: 65vw;
+    height: 60vh;
+    background-color: #000000bb;
+    color: white;
+    border-radius: 10px;
+    border: 10px solid #5c8a53;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 1);
+    overflow-y: auto;
+    font-family: 'Pokemon';
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: relative;
+}
+
+.highscore-table::-webkit-scrollbar {
+    display: none;
+}
+
+.highscore-table-title {
+    font-size: 3.5vh;
+    padding: 0.5vh 0;
+    margin: 0 auto;
+    text-align: center;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 1);
+    position: sticky;
+    top: 0;
+    background-color: #0c1a13;
+    z-index: 1;
+    margin-top: auto;
+}
+
+#table-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.table-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.table-cell {
+    width: 25%;
+    text-align: center;
+    font-size: 2.5vh;
+}
+
+.table-cell-info {
+    width: 25%;
+    text-align: center;
+    font-size: 3.5vh;
+}
+
+.define {
+    border-bottom: 1px solid #5c8a53;
+}
