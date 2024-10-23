@@ -1,3 +1,54 @@
+//Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyC03BiPatj7xR9CLKAu0V68WpuWZvXX46w",
+    authDomain: "pokeapollo-tdw.firebaseapp.com",
+    projectId: "pokeapollo-tdw",
+    storageBucket: "pokeapollo-tdw.appspot.com",
+    messagingSenderId: "9147719603",
+    appId: "1:9147719603:web:8647d663b3cdf00b4d75c6"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Get highscore by username
+async function getHighscoreById(username) {
+    try {
+        const userRef = db.collection('highscores').doc(username);
+        const doc = await userRef.get();
+
+        if (!doc.exists) {
+            console.log(`No highscore found for user: ${username}`);
+            return null;
+        }
+
+        console.log('Highscore: ', doc.data().highscore);
+        return doc.data().highscore;
+    } catch (error) {
+        console.error('Error getting highscore:', error);
+    }
+}
+
+// Add highscore to the database
+async function addHighscore(username, score) {
+    if (!username || score === undefined) {
+        console.error('Username or score is missing!');
+        return;
+    }
+
+    const currentHighscore = await getHighscoreById(username);
+
+    if (currentHighscore === null || score > currentHighscore) {
+        console.log("New Score: ", score);
+        const cityRef = db.collection('highscores').doc(username);
+        await cityRef.set({ highscore: score }, { merge: true });
+        console.log("Highscore added!");
+    } else {
+        console.log("Score is lower than current highscore:", currentHighscore);
+    }
+}
+
 // URLs for APIs
 const POKEMON_API_URL = 'https://pokeapi.co/api/v2/pokemon/';
 const SPRITE_URL_FRONT = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iv/platinum/';
@@ -14,7 +65,6 @@ const startBtn = document.getElementById("start-btn");
 const pokemonOptions = document.getElementById("pokemon-options");
 const moveOptions = document.getElementById("move-options");
 const startBattleBtn = document.getElementById("start-battle-btn");
-const restartBtn = document.getElementById("restart-btn");
 const loadingBattle = document.getElementById("loading-battle");
 const battle = document.getElementById("battle");
 
@@ -31,7 +81,7 @@ function capitalize(word) {
 
 // Start the game
 startBtn.addEventListener("click", startGame);
-function startGame() {
+async function startGame() {
     playerName = playerNameInput.value.toUpperCase();
     if (!playerName) {
         alert("Please enter your Name!");
@@ -253,7 +303,7 @@ function updateBattleScreen() {
 let currentTurn;
 function fasterPokemon() {
     if (!playerPokemon || !enemyPokemon) {
-        console.error("Player or enemy Pokemon is not defined!");
+        console.log("Player or enemy Pokemon is not defined!");
         return;
     }
 
@@ -357,7 +407,10 @@ async function executeMoves() {
     const performPlayerMove = async () => {
         await useMove("player", playerChosenMove);
         if (enemyPokemon.hp > 0) {
-            setTimeout(performEnemyMove, 1000);
+            setTimeout(async () => {
+                await useMove("enemy", enemyChosenMove);
+                nextTurn();
+            }, 1000);
         } else {
             endBattle("player");
         }
@@ -527,8 +580,10 @@ function handleContinueBattle() {
 }
 
 // Function to restart the game after a loss
-function restartAfterLose() {
+async function restartAfterLose() {
     const continueBtn = document.getElementById("continue-btn");
+
+    await addHighscore(playerName, victories);
 
     addBattleLog(`${enemyPokemon.name} WON THE BATTLE!`);
     addBattleLog(`${playerName} Pokemon has fainted!`);
