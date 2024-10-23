@@ -252,6 +252,11 @@ function updateBattleScreen() {
 // Function to determine which Pokemon goes first
 let currentTurn;
 function fasterPokemon() {
+    if (!playerPokemon || !enemyPokemon) {
+        console.error("Player or enemy Pokemon is not defined!");
+        return;
+    }
+
     if (playerPokemon.speed > enemyPokemon.speed) {
         currentTurn = "player";
     } else if (enemyPokemon.speed > playerPokemon.speed) {
@@ -262,15 +267,6 @@ function fasterPokemon() {
     return currentTurn;
 }
 
-// Function to start the turn
-function startTurn() {
-    if (currentTurn === "player") {
-        playerTurn();
-    } else {
-        enemyTurn();
-    }
-}
-
 const fightBtn = document.getElementById("fight-btn");
 fightBtn.addEventListener("click", () => {
     document.getElementById("choose-moves").classList.remove("hidden");
@@ -278,6 +274,18 @@ fightBtn.addEventListener("click", () => {
 });
 
 const chooseMovesContainer = document.getElementById("choose-moves");
+
+// Variables to store the chosen moves
+let playerChosenMove = null;
+let enemyChosenMove = null;
+
+// Function to start the turn
+function startTurn() {
+    playerChosenMove = null;
+    enemyChosenMove = null;
+
+    playerTurn();
+}
 
 // Function to handle the player's turn
 function playerTurn() {
@@ -297,8 +305,14 @@ function playerTurn() {
         moveButton.classList.add("move-btn");
 
         moveButton.addEventListener("click", () => {
-            useMove("player", index);
+            playerChosenMove = index;
             moveButtons.classList.add("hidden");
+
+            if (enemyChosenMove === null) {
+                enemyTurn();
+            } else {
+                executeMoves();
+            }
         });
 
         moveButtons.appendChild(moveButton);
@@ -316,7 +330,67 @@ function playerTurn() {
     });
 }
 
-// Function to execute a move
+// Function to handle the enemy's turn
+function enemyTurn() {
+    enemyChosenMove = Math.floor(Math.random() * enemyPokemon.moves.length);
+
+    if (playerChosenMove === null) {
+        return;
+    } else {
+        executeMoves();
+    }
+}
+
+// Function to execute the moves
+async function executeMoves() {
+    const playerSpeed = playerPokemon.speed;
+    const enemySpeed = enemyPokemon.speed;
+
+    const nextTurn = () => {
+        if (playerPokemon.hp > 0 && enemyPokemon.hp > 0) {
+            setTimeout(startTurn, 1000);
+        } else {
+            endBattle(playerPokemon.hp > 0 ? "player" : "enemy");
+        }
+    };
+
+    const performPlayerMove = async () => {
+        await useMove("player", playerChosenMove);
+        if (enemyPokemon.hp > 0) {
+            setTimeout(performEnemyMove, 1000);
+        } else {
+            endBattle("player");
+        }
+    };
+
+    const performEnemyMove = async () => {
+        await useMove("enemy", enemyChosenMove);
+        if (playerPokemon.hp > 0) {
+            setTimeout(async () => {
+                await useMove("player", playerChosenMove);
+                nextTurn();
+            }, 1000);
+        } else {
+            endBattle("enemy");
+        }
+    };
+
+    if (playerSpeed > enemySpeed) {
+        await performPlayerMove();
+    } else if (enemySpeed > playerSpeed) {
+        await performEnemyMove();
+    } else {
+        const firstAttacker = Math.random() < 0.5 ? "player" : "enemy";
+        if (firstAttacker === "player") {
+            await performPlayerMove();
+        } else {
+            await performEnemyMove();
+        }
+    }
+}
+
+
+// Function to use the move chosed
 async function useMove(user, moveIndex) {
     const attacker = user === "player" ? playerPokemon : enemyPokemon;
     const defender = user === "player" ? enemyPokemon : playerPokemon;
@@ -398,12 +472,6 @@ function addBattleLog(message) {
     battleLogContainer.scrollTop = battleLogContainer.scrollHeight;
 }
 
-// Function to handle the enemy's turn
-function enemyTurn() {
-    const randomMoveIndex = Math.floor(Math.random() * enemyPokemon.moves.length);
-    useMove("enemy", randomMoveIndex);
-}
-
 let victories = 0; // Variable to count the number of victories
 
 // Function to handle the end of the battle
@@ -416,16 +484,16 @@ function endBattle(winner) {
     document.getElementById('log-list').innerHTML = "";
 
     if (winner === "player") {
-        continueAfterWin(winner);
+        continueAfterWin();
     }
 
     if (winner === "enemy") {
-        restartAfterLose(winner);
+        restartAfterLose();
     }
 }
 
 // Function to continue the game after a win
-function continueAfterWin(winner) {
+function continueAfterWin() {
     const continueBtn = document.getElementById("continue-btn");
 
     addBattleLog(`${playerName} WON THE BATTLE!`);
@@ -461,7 +529,7 @@ function handleContinueBattle() {
 }
 
 // Function to restart the game after a loss
-function restartAfterLose(winner) {
+function restartAfterLose() {
     const continueBtn = document.getElementById("continue-btn");
 
     addBattleLog(`${enemyPokemon.name} WON THE BATTLE!`);
