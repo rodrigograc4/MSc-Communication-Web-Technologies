@@ -428,17 +428,20 @@ function continueAfterWin(winner) {
 
     continueBtn.classList.remove("hidden");
 
-    continueBtn.addEventListener("click", async () => {
-        continueBtn.classList.add("hidden");
+    continueBtn.removeEventListener("click", handleContinueBattle);
+    continueBtn.addEventListener("click", handleContinueBattle);
+}
 
-        victories += 1;
-        document.querySelector(".player-name").textContent = `${playerName} - ${victories} W`;
-        document.querySelector(".battle-tittle").textContent = "VS";
+// Separate function to handle continuing the battle
+function handleContinueBattle() {
+    const continueBtn = document.getElementById("continue-btn");
+    continueBtn.classList.add("hidden");
 
-        document.getElementById('log-list').innerHTML = "";
+    victories += 1;
+    console.log("Victories: ", victories);
+    document.querySelector(".player-name").textContent = `${playerName} - ${victories} W`;
 
-        continueBattle();
-    });
+    continueBattle();
 }
 
 // Function to restart the game after a loss
