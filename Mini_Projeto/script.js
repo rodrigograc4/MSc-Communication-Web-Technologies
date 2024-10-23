@@ -604,40 +604,7 @@ async function restartAfterLose() {
 
     continueBtn.classList.remove("hidden");
 
-    continueBtn.removeEventListener("click", handleRestartGame);
-    continueBtn.addEventListener("click", handleRestartGame);
-}
-
-// Function to reset the game and go back to the start screen
-function handleRestartGame() {
-    selectedPokemon = null;
-    selectedMoves = [];
-    playerPokemon = null;
-    enemyPokemon = null;
-    playerName = null;
-    victories = 0;
-    currentTurn = "player";
-
-    pokemonOptions.innerHTML = '';
-    moveOptions.innerHTML = '';
-    document.getElementById('log-list').innerHTML = '';
-
-    document.querySelector(".player-pokemon-hp-bar").style.width = "100%";
-    document.querySelector(".enemy-pokemon-hp-bar").style.width = "100%";
-    document.querySelector(".player-pokemon-image").src = "./images/transparent.png";
-    document.querySelector(".enemy-pokemon-image").src = "./images/transparent.png";
-
-    document.querySelector(".player-name").textContent = '';
-    document.querySelector(".enemy-name").textContent = '';
-
-    battleScreen.classList.add("hidden");
-    choosePokemonScreen.classList.add("hidden");
-    chooseMovesScreen.classList.add("hidden");
-    startScreen.classList.remove("hidden");
-
-    document.getElementById("continue-btn").classList.add("hidden");
-
-    loadPokemonOptions();
-
-    console.log("Game has been reset. Ready for a new battle!");
+    continueBtn.addEventListener("click", () => {
+        location.reload();
+    });
 }
