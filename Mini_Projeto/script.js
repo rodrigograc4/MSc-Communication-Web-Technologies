@@ -529,13 +529,11 @@ function addBattleLog(message) {
 let victories = 0; // Variable to count the number of victories
 
 // Function to handle the end of the battle
-async function endBattle(winner) {
+function endBattle(winner) {
     const moveButtons = document.getElementById("choose-moves");
     const fightBtn = document.getElementById("fight-btn");
     moveButtons.classList.add("hidden");
     fightBtn.classList.add("hidden");
-
-    await addHighscore(playerName, playerPokemon.name, victories);
 
     document.getElementById('log-list').innerHTML = "";
 
@@ -573,13 +571,15 @@ function continueAfterWin() {
 }
 
 // Separate function to handle continuing the battle
-function handleContinueBattle() {
+async function handleContinueBattle() {
     const continueBtn = document.getElementById("continue-btn");
     continueBtn.classList.add("hidden");
 
     victories += 1;
     console.log("Victories: ", victories);
     document.querySelector(".player-name").textContent = `${playerName} - ${victories} W`;
+
+    await addHighscore(playerName, playerPokemon.name, victories);
 
     continueBattle();
 }
